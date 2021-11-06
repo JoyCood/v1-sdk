@@ -1,0 +1,22 @@
+{
+  "name": "@valuemaster/v1-sdk",
+  "version": "1.0.0",
+  "description": "An SDK for building applicatioins on top of ValueMaster V1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/JoyCood/v1-sdk.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JoyCood/v1-sdk/issues"
+  },
+  "homepage": "https://github.com/JoyCood/v1-sdk#readme",
+  "dependencies": {
+    "valuemaster-sdk-core": "^1.0.7"
+  }
+}
