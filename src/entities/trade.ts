@@ -27,35 +27,17 @@ export class Trade<TInput extends Currency> {
 	 */
 	public readonly itemType: ItemType
 
-	public static buy(type: ItemType, quantity: BigintIsh = 1) {
-		const opts: options = {
-        itemType: type,
-				quantity: quantity,
-				action: Action.BUY
-		}
-    return new Trade(opts)
-	}
+	public static buy(opts: options) { return new Trade(opts) }
 
-	public static sale(type:ItemType, quantity: BigintIsh = 1) {
-    const opts: options = {
-			itemType: type,
-			quantity: quantity,
-			action: Action.SALE
-		}
-		return new Trade(opts)
-	}
+	public static sale(opts: options) { return new Trade(opts) }
 
-	public static update(type:ItemType) {
+	public static update(opts: options) { return new Trade(opts) }
 
-	}
+	public static cancel(opts: options) { return new Trade(opts) }
 
-	public static cancel() {
-
-	}
-
-  public constructor({action, quantity, itemType} : options) {
-      this.action = action
-			this.quantity = quantity
-			this.itemType = itemType
+  public constructor(options : options) {
+      this.action = options.action
+			this.quantity = options.quantity
+			this.itemType = options.itemType
   }
 }
