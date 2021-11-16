@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JoyCood/v1-sdk#readme",
   "dependencies": {
-    "valuemaster-sdk-core": "^1.0.7"
+    "jsbi": "^4.1.0",
+    "valuemaster-sdk-core": "^1.0.10"
   }
 }

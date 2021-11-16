@@ -1,36 +1,61 @@
-import { Currency, CurrencyAmount, TradeType } from "valuemaster-sdk-core";
+import { Currency, CurrencyAmount, ItemType,  Action, BigintIsh } from "valuemaster-sdk-core";
 
-export class Trade<TInput extends Currency, TTradeType extends TradeType> {
-  /**
-   * The route of the trade, i.e. which pairs the trade goes through and the input currencies.
-   */
-  public readonly route: Route<TInput>
+export interface options {
+  readonly action: Action
+	readonly quantity: BigintIsh
+	readonly itemType: ItemType
+}
 
+export class Trade<TInput extends Currency> {
   /**
    * The input amount for the trade assuming no slippage.
    */
   public readonly inputAmount: CurrencyAmount<TInput>
-  /**
-   * The price expressed in terms of output amount/input amount.
-   */
-  public readonly executionPrice: Price<TInput>
 
-  /**
-   * Constructs an exact in trade with the given amount in and route
-   * @param route route of the exact in trade
-   * @param amountIn the amount being passed in
-   */
-  public static exactIn<TInput extends Currency>(
-    route: Route<TInput>,
-    amountIn: CurrencyAmount<TInput>
-  ): Trade<TInput> {
-    return new Trade(route, amountIn)
-  }
+	/**
+	 * Specified quantity for sale or buy
+	 */
+  public readonly quantity: BigintIsh
 
-  public constructor(
-    route: Route<TInput>,
-    amount: CurrencyAmount<TInput>,
-  ) {
-    this.route = route
+	/**
+	 * the action is buy | sale | update | cancel
+	 */
+	public readonly action: Action
+
+	/**
+	 * the type of item for operation
+	 */
+	public readonly itemType: ItemType
+
+	public static buy(type: ItemType, quantity: BigintIsh = 1) {
+		const opts: options = {
+        itemType: type,
+				quantity: quantity,
+				action: Action.BUY
+		}
+    return new Trade(opts)
+	}
+
+	public static sale(type:ItemType, quantity: BigintIsh = 1) {
+    const opts: options = {
+			itemType: type,
+			quantity: quantity,
+			action: Action.SALE
+		}
+		return new Trade(opts)
+	}
+
+	public static update(type:ItemType) {
+
+	}
+
+	public static cancel() {
+
+	}
+
+  public constructor({action, quantity, itemType} : options) {
+      this.action = action
+			this.quantity = quantity
+			this.itemType = itemType
   }
 }

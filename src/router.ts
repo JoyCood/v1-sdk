@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, TradeType } from "valuemaster-sdk-core"
+import { Currency, CurrencyAmount, TradeType, itemType, validateAndParseAddress } from "valuemaster-sdk-core"
+import { Trade } from "./entities/trade"
 
 /**
  * Options for producing the arguments to send call to the router.
@@ -39,6 +40,8 @@ function toHex(currencyAmount: CurrencyAmount<Currency>) {
   return `0x${currencyAmount.quotient.toString(16)}`
 }
 
+const ZERO_HEX = '0x0'
+
 export abstract class Router {
   /**
    * Cannot be constructed.
@@ -50,11 +53,38 @@ export abstract class Router {
    * @param options options for the call parameters
    */
   public static wapCallParameters(
-    trade: Trade<Currency, Currency, TradeType>,
+    trade: Trade<Currency>,
     options: TradeOptions | TradeOptionsDeadline
   ): SwapParameters {
     const etherIn = trade.inputAmount.currency.isNative
 
     invariant(!('ttl' in options) || options.ttl > 0, 'TTL')
+
+		const to: string = validateAndParseAddress(options.recipient)
+		const quantity: string = toHex(trade.quantity)
+
+		let methodName: string
+		let args: (string | string[])[]
+		let value: string
+
+		switch (trade.action) {
+			case TradeType.BUY:
+			  methodName = trade.itemType === itemType.ERC721 ? "executeERC721Listing" : "executeERC1155Listing"
+
+			case TradeType.SALE:
+				methodName = trade.itemType === itemType.ERC721 ? "addERC721Listing" : "addERC1155Listing"
+
+			case TradeType.CANCEL:
+				methodName = trade.itemType === itemType.ERC721 ? "cancelERC721Listing" : "cancelERC1155Listing"
+
+			case TradeType.UPDATE:
+				methodName = trade.itemType === itemType.ERC721 ? "updateERC721Listing" : "updateERC1155Listing"
+		}
+
+		return {
+			methodName,
+			args,
+			value
+		}
   }
 }
