@@ -1,12 +1,14 @@
-import { Currency, CurrencyAmount, ItemType,  Action, BigintIsh } from "valuemaster-sdk-core";
+import { Currency, CurrencyAmount, NFT, Action, BigintIsh } from "valuemaster-sdk-core";
 
 export interface options {
   readonly action: Action
 	readonly quantity: BigintIsh
-	readonly itemType: ItemType
 }
 
 export class Trade<TInput extends Currency> {
+	public readonly listingId: string
+
+	public readonly nft: NFT
   /**
    * The input amount for the trade assuming no slippage.
    */
@@ -22,22 +24,17 @@ export class Trade<TInput extends Currency> {
 	 */
 	public readonly action: Action
 
-	/**
-	 * the type of item for operation
-	 */
-	public readonly itemType: ItemType
+	public static buy(nft: NFT, opts: options) { return new Trade(nft, opts) }
 
-	public static buy(opts: options) { return new Trade(opts) }
+	public static sale(nft: NFT, opts: options) { return new Trade(nft, opts) }
 
-	public static sale(opts: options) { return new Trade(opts) }
+	public static update(nft: NFT, opts: options) { return new Trade(nft, opts) }
 
-	public static update(opts: options) { return new Trade(opts) }
+	public static cancel(nft: NFT, opts: options) { return new Trade(nft, opts) }
 
-	public static cancel(opts: options) { return new Trade(opts) }
-
-  public constructor(options : options) {
+  private constructor(nft: NFT, options : options) {
+		  this.nft = nft
       this.action = options.action
 			this.quantity = options.quantity
-			this.itemType = options.itemType
   }
 }

@@ -1,5 +1,6 @@
-import { Currency, CurrencyAmount, TradeType, itemType, validateAndParseAddress } from "valuemaster-sdk-core"
+import { Currency, CurrencyAmount, Action, ItemType, validateAndParseAddress } from "valuemaster-sdk-core"
 import { Trade } from "./entities/trade"
+import invariant from 'tiny-invariant'
 
 /**
  * Options for producing the arguments to send call to the router.
@@ -12,10 +13,14 @@ export interface TradeOptions {
    */
   ttl: number
 
-  /**
-   * Whether any of the tokens in the path are fee on transfer tokens, which should be handled with special methods
-   */
-  feeOnTransfer?: boolean
+	/**
+	 * The account that should receive the output of the swap.
+	 */
+	recipient: string
+}
+
+export interface TradeOptionsDeadline extends Omit<TradeOptions, 'ttl'> {
+	deadline: number
 }
 
 /**
@@ -52,7 +57,7 @@ export abstract class Router {
    * @param trade to produce call parameters for
    * @param options options for the call parameters
    */
-  public static wapCallParameters(
+  public static swapCallParameters(
     trade: Trade<Currency>,
     options: TradeOptions | TradeOptionsDeadline
   ): SwapParameters {
@@ -61,24 +66,25 @@ export abstract class Router {
     invariant(!('ttl' in options) || options.ttl > 0, 'TTL')
 
 		const to: string = validateAndParseAddress(options.recipient)
-		const quantity: string = toHex(trade.quantity)
 
 		let methodName: string
 		let args: (string | string[])[]
 		let value: string
 
 		switch (trade.action) {
-			case TradeType.BUY:
-			  methodName = trade.itemType === itemType.ERC721 ? "executeERC721Listing" : "executeERC1155Listing"
+			case Action.BUY:
+			  methodName = trade.nft.isERC721 ? "executeERC721Listing" : "executeERC1155Listing"
+        args = [trade.listingId]
+			case Action.SALE:
+				methodName = trade.nft.isERC721 ? "addERC721Listing" : "addERC1155Listing"
+				args = [trade.nft.id.toString()]
 
-			case TradeType.SALE:
-				methodName = trade.itemType === itemType.ERC721 ? "addERC721Listing" : "addERC1155Listing"
+			case Action.CANCEL:
+				methodName = trade.nft.isERC721 ? "cancelERC721Listing" : "cancelERC1155Listing"
+				args = [trade.listingId]
 
-			case TradeType.CANCEL:
-				methodName = trade.itemType === itemType.ERC721 ? "cancelERC721Listing" : "cancelERC1155Listing"
-
-			case TradeType.UPDATE:
-				methodName = trade.itemType === itemType.ERC721 ? "updateERC721Listing" : "updateERC1155Listing"
+			case Action.UPDATE:
+				methodName = trade.nft.isERC721 ? "updateERC721Listing" : "updateERC1155Listing"
 		}
 
 		return {
