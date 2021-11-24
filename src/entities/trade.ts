@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, NFT, Action, BigintIsh } from "valuemaster-sdk-core";
+import { Currency, CurrencyAmount, NFT, Action, BigintIsh } from "@valuemaster/sdk-core";
 
 export interface options {
   readonly action: Action

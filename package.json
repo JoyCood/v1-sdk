@@ -3,16 +3,16 @@
   "version": "1.0.4",
   "description": "An SDK for building applicatioins on top of ValueMaster V1",
   "main": "dist/index.js",
-	"typings": "dist/index.d.ts",
-	"files": [
-		"dist"
-	],
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-		"lint": "tsdx lint src test",
-		"build": "tsdx build",
-		"start": "tsdx watch",
+    "lint": "tsdx lint src test",
+    "build": "tsdx build",
+    "start": "tsdx watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-		"prepublishOnly": "tsdx build"
+    "prepublishOnly": "tsdx build"
   },
   "repository": {
     "type": "git",
@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/JoyCood/v1-sdk#readme",
   "dependencies": {
+    "@valuemaster/sdk-core": "^1.0.4",
     "jsbi": "^4.1.0",
-    "tiny-invariant": "^1.2.0",
-    "valuemaster-sdk-core": "^1.0.13"
+    "tiny-invariant": "^1.2.0"
   }
 }

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Action, ItemType, validateAndParseAddress } from "valuemaster-sdk-core"
+import { Currency, CurrencyAmount, Action, ItemType, validateAndParseAddress } from "@valuemaster/sdk-core"
 import { Trade } from "./entities/trade"
 import invariant from 'tiny-invariant'
 

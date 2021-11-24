@@ -1,4 +1,4 @@
-import { BigintIsh } from "valuemaster-sdk-core"
+import { BigintIsh } from "@valuemaster/sdk-core"
 import JSBI from 'jsbi'
 
 /**
