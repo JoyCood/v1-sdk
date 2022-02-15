@@ -6,12 +6,6 @@ import invariant from 'tiny-invariant'
  * Options for producing the arguments to send call to the router.
  */
 export interface TradeOptions {
-  /**
-   * How Long the swap is valid until it expires, in seconds.
-   * This will be used to produce a `deadline` parameter which is computed from when the swap call parameters
-   * are generated.
-   */
-  ttl: number
 
 	/**
 	 * The account that should receive the output of the swap.
@@ -19,9 +13,6 @@ export interface TradeOptions {
 	recipient: string
 }
 
-export interface TradeOptionsDeadline extends Omit<TradeOptions, 'ttl'> {
-	deadline: number
-}
 
 /**
  * The parameters to use in the call to the V1 Router to execute a trade.
@@ -41,12 +32,6 @@ export interface SwapParameters {
   value: string
 }
 
-function toHex(currencyAmount: CurrencyAmount<Currency>) {
-  return `0x${currencyAmount.quotient.toString(16)}`
-}
-
-const ZERO_HEX = '0x0'
-
 export abstract class Router {
   /**
    * Cannot be constructed.
@@ -59,12 +44,9 @@ export abstract class Router {
    */
   public static swapCallParameters(
     trade: Trade<Currency>,
-    options: TradeOptions | TradeOptionsDeadline
+    options: TradeOptions
   ): SwapParameters {
     const etherIn = trade.inputAmount.currency.isNative
-
-    invariant(!('ttl' in options) || options.ttl > 0, 'TTL')
-
 		const to: string = validateAndParseAddress(options.recipient)
 
 		let methodName: string
@@ -75,6 +57,7 @@ export abstract class Router {
 			case Action.BUY:
 			  methodName = trade.nft.isERC721 ? "executeERC721Listing" : "executeERC1155Listing"
         args = [trade.listingId]
+				
 			case Action.SALE:
 				methodName = trade.nft.isERC721 ? "addERC721Listing" : "addERC1155Listing"
 				args = [trade.nft.id.toString()]
