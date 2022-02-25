@@ -1,6 +1,6 @@
 {
   "name": "@valuemaster/v1-sdk",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "An SDK for building applicatioins on top of ValueMaster V1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
