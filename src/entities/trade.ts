@@ -19,17 +19,19 @@ export class Trade<TInput extends Currency> {
 	 */
 	public readonly quantity: BigintIsh
 
+
 	/**
 	 * the action is buy | sale | update | cancel
 	 */
 	public readonly action: Action
 
 	public static buy<TInput extends Currency>(
+		listingId: string,
 		currencyAmount: CurrencyAmount<TInput>,
 		nft: NFT,
 		opts: options
 	) {
-		return new Trade(currencyAmount, nft, opts)
+		return new Trade(currencyAmount, nft, opts, listingId)
 	}
 
 	public static sale<TInput extends Currency>(
@@ -56,10 +58,11 @@ export class Trade<TInput extends Currency> {
 			return new Trade(currencyAmount, nft, opts) 
 	}
 
-	private constructor(amount: CurrencyAmount<TInput>, nft: NFT, options: options) {
+	private constructor(amount: CurrencyAmount<TInput>, nft: NFT, options: options, listingId?: string) {
 		this.inputAmount = amount
 		this.nft = nft
 		this.action = options.action
 		this.quantity = options.quantity
+		this.listingId = listingId
 	}
 }

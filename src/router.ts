@@ -32,6 +32,8 @@ export interface SwapParameters {
   value: string
 }
 
+const ZERO_HEX = '0x0'
+
 export abstract class Router {
   /**
    * Cannot be constructed.
@@ -57,17 +59,23 @@ export abstract class Router {
 			case Action.BUY:
 			  methodName = trade.nft.isERC721 ? "executeERC721Listing" : "executeERC1155Listing"
         args = [trade.listingId]
-				
+				value = ZERO_HEX
+			  break
 			case Action.SALE:
 				methodName = trade.nft.isERC721 ? "addERC721Listing" : "addERC1155Listing"
-				args = [trade.nft.id.toString()]
-
+				args = [trade.nft.tokenId]
+				value = ZERO_HEX
+        break
 			case Action.CANCEL:
 				methodName = trade.nft.isERC721 ? "cancelERC721Listing" : "cancelERC1155Listing"
 				args = [trade.listingId]
-
+				value = ZERO_HEX
+        break
 			case Action.UPDATE:
 				methodName = trade.nft.isERC721 ? "updateERC721Listing" : "updateERC1155Listing"
+				args = [trade.nft.address, trade.nft.tokenId, trade.nft.address, "1000000"]
+				value = ZERO_HEX
+				break
 		}
 
 		return {

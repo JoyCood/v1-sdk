@@ -1,6 +1,6 @@
 {
   "name": "@valuemaster/v1-sdk",
-  "version": "1.0.7",
+  "version": "1.0.13",
   "description": "An SDK for building applicatioins on top of ValueMaster V1",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/JoyCood/v1-sdk#readme",
   "dependencies": {
-    "@valuemaster/sdk-core": "^1.0.4",
+    "@valuemaster/sdk-core": "^1.0.10",
     "jsbi": "^4.1.0",
     "tiny-invariant": "^1.2.0"
   }
