@@ -1,12 +1,14 @@
 import { Currency, CurrencyAmount, NFT, Action, BigintIsh } from "@valuemaster/sdk-core";
+import invariant from "tiny-invariant";
 
 export interface options {
 	readonly action: Action
-	readonly quantity: BigintIsh
+	readonly listingId?: BigintIsh
+	readonly quantity?: BigintIsh
 }
 
 export class Trade<TInput extends Currency> {
-	public readonly listingId: string
+	public readonly listingId: BigintIsh
 
 	public readonly nft: NFT
 	/**
@@ -19,19 +21,19 @@ export class Trade<TInput extends Currency> {
 	 */
 	public readonly quantity: BigintIsh
 
-
 	/**
 	 * the action is buy | sale | update | cancel
 	 */
 	public readonly action: Action
 
 	public static buy<TInput extends Currency>(
-		listingId: string,
 		currencyAmount: CurrencyAmount<TInput>,
 		nft: NFT,
 		opts: options
 	) {
-		return new Trade(currencyAmount, nft, opts, listingId)
+		invariant(('listingId' in opts), 'LISTING_ID')
+		invariant(('quantity' in opts), 'QUANTITY')
+		return new Trade(currencyAmount, nft, opts)
 	}
 
 	public static sale<TInput extends Currency>(
@@ -39,6 +41,7 @@ export class Trade<TInput extends Currency> {
 		nft: NFT,
 		opts: options
 	) {
+		invariant(('quantity' in opts), 'QUANTITY')
 		return new Trade(currencyAmount, nft, opts)
 	}
 
@@ -46,7 +49,8 @@ export class Trade<TInput extends Currency> {
 		currencyAmount: CurrencyAmount<TInput>, 
 		nft: NFT, 
 		opts: options
-	) { 
+	) {
+		invariant(('listingId' in opts), 'LISTING_ID') 
 		return new Trade(currencyAmount, nft, opts) 
 	}
 
@@ -55,14 +59,15 @@ export class Trade<TInput extends Currency> {
 		nft: NFT, 
 		opts: options
 	) { 
-			return new Trade(currencyAmount, nft, opts) 
+		invariant(('listingId' in opts), 'LISTING_ID') 
+		return new Trade(currencyAmount, nft, opts) 
 	}
 
-	private constructor(amount: CurrencyAmount<TInput>, nft: NFT, options: options, listingId?: string) {
+	private constructor(amount: CurrencyAmount<TInput>, nft: NFT, options: options) {
 		this.inputAmount = amount
 		this.nft = nft
 		this.action = options.action
 		this.quantity = options.quantity
-		this.listingId = listingId
+		this.listingId = options.listingId
 	}
 }

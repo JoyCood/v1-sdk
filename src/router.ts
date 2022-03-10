@@ -58,17 +58,18 @@ export abstract class Router {
 		switch (trade.action) {
 			case Action.BUY:
 			  methodName = trade.nft.isERC721 ? "executeERC721Listing" : "executeERC1155Listing"
-        args = [trade.listingId]
+        args = [trade.listingId.toString()]
 				value = ZERO_HEX
 			  break
 			case Action.SALE:
 				methodName = trade.nft.isERC721 ? "addERC721Listing" : "addERC1155Listing"
-				args = [trade.nft.tokenId]
+				args = trade.nft.isERC721
+				  ? [trade.nft.address, trade.nft.tokenId, trade.inputAmount.currency.wrapped.address, trade]
 				value = ZERO_HEX
         break
 			case Action.CANCEL:
 				methodName = trade.nft.isERC721 ? "cancelERC721Listing" : "cancelERC1155Listing"
-				args = [trade.listingId]
+				args = [trade.listingId.toString()]
 				value = ZERO_HEX
         break
 			case Action.UPDATE:
