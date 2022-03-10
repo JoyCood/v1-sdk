@@ -64,7 +64,7 @@ export abstract class Router {
 			case Action.SALE:
 				methodName = trade.nft.isERC721 ? "addERC721Listing" : "addERC1155Listing"
 				args = trade.nft.isERC721
-				  ? [trade.nft.address, trade.nft.tokenId, trade.inputAmount.currency.wrapped.address, trade]
+				  ? [trade.nft.address, trade.nft.tokenId, trade.inputAmount.currency.wrapped.address, trade.inputAmount.]
 				value = ZERO_HEX
         break
 			case Action.CANCEL:
